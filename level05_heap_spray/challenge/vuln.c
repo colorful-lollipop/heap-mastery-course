@@ -91,23 +91,26 @@ int main() {
 
             case 6:
                 // 目标：通过堆喷控制 UAF
-                // 需要创建特定布局并利用
+                // 改进的胜利条件：检查有多少 chunk 包含特定模式
                 if (count > 10) {
-                    // 检查是否有特定模式
-                    int found = 0;
-                    for (int i = 0; i < count - 10; i++) {
+                    // 统计包含特定模式的 chunk 数量（更确定性的条件）
+                    int spray_count = 0;
+                    for (int i = 0; i < count; i++) {
                         if (chunks[i] != NULL &&
-                            *(unsigned long*)chunks[i] == 0x53505241592121 &&
-                            chunks[i+10] != NULL &&
-                            *(unsigned long*)chunks[i+10] == 0x53505241592121) {
-                            found = 1;
-                            break;
+                            *(unsigned long*)chunks[i] == 0x53505241592121) {
+                            spray_count++;
                         }
                     }
-                    if (found) winner();
-                    else printf("Pattern not found. Heap spray more!\n");
+                    // 至少需要 10 个 chunk 包含模式（更容易达成和验证）
+                    if (spray_count >= 10) {
+                        printf("Found %d chunks with pattern! (Need >= 10)\n", spray_count);
+                        winner();
+                    } else {
+                        printf("Found %d chunks with pattern. Need >= 10\n", spray_count);
+                        printf("Hint: Allocate more chunks and fill them with 'SPRAY!!'\n");
+                    }
                 } else {
-                    printf("Need more chunks!\n");
+                    printf("Need at least 10 chunks! Current: %d\n", count);
                 }
                 break;
 

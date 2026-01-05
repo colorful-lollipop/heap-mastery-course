@@ -85,12 +85,19 @@ int main() {
             case 5:
                 // 目标：通过 fastbin dup 控制某个地址
                 if (count > 0) {
-                    void *target = chunks[0];
+                    // 显示当前值和目标值
+                    unsigned long current_value = 0;
+                    if (chunks[0]) {
+                        current_value = *(unsigned long*)chunks[0];
+                    }
+                    printf("Target: 0x4141414141414141\n");
+                    printf("Current: 0x%016lx\n", current_value);
+
                     // 检查是否能控制特定地址
-                    if (*(unsigned long*)chunks[0] == 0x4141414141414141) {
+                    if (current_value == 0x4141414141414141) {
                         winner();
                     } else {
-                        printf("Keep trying! Target: 0x4141414141414141\n");
+                        printf("Hint: Use double free to allocate chunks[0] multiple times!\n");
                     }
                 }
                 break;

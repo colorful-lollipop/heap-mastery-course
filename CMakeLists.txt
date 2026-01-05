@@ -29,6 +29,10 @@ add_library(heap_utils STATIC
     common/src/debug_utils.c
 )
 
+# glibc info tool
+add_executable(glibc_info common/src/glibc_info.c)
+target_link_libraries(glibc_info ${CMAKE_DL_LIBS})
+
 # Add subdirectories for each level
 add_subdirectory(level00_setup)
 add_subdirectory(level01_overflow)

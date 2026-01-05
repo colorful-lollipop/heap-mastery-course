@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define FLAG_FILE "flag.txt"
 
@@ -68,10 +69,10 @@ int main() {
 
             case 4:
                 // 目标：通过 tcache poisoning 实现任意写
-                if (*(unsigned long long*)chunks[0] == 0xdeadbeefcafebabefull) {
+                if (*(unsigned long long*)chunks[0] == 0xdeadbeefcafebabeULL) {
                     winner();
                 } else {
-                    printf("Not yet! Target: 0xdeadbeefcafebabefull\n");
+                    printf("Not yet! Target: 0xdeadbeefcafebabeULL\n");
                 }
                 break;
 

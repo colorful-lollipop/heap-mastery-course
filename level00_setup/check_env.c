@@ -217,7 +217,9 @@ void check_project_structure() {
         if (access(required_paths[i], F_OK) == 0) {
             TEST_INFO(required_paths[i]);
         } else {
-            TEST_FAIL("Missing: " required_paths[i]);
+            char fail_msg[256];
+            snprintf(fail_msg, sizeof(fail_msg), "Missing: %s", required_paths[i]);
+            TEST_FAIL(fail_msg);
             all_exist = 0;
         }
     }

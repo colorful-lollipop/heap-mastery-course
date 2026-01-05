@@ -122,18 +122,33 @@ levelXX_<name>/
 
 ```bash
 # 编译所有关卡
-cd build && make
+cd build && cmake .. && make
 
-# 运行所有测试
-./tests/test_all_levels.sh
+# 方式1: 使用CMake测试目标 (推荐)
+make verify              # 验证所有关卡和利用脚本
+make test_exploits       # verify的别名
 
-# 测试单个关卡
-./tests/test_level.sh 01
+# 方式2: 直接运行验证脚本
+./tests/verify_all.sh    # 从build/目录运行
+
+# 单独测试某个关卡
+cd level01_overflow/challenge
+make flag                # 创建flag.txt
+./vuln                   # 运行漏洞程序
+python3 ../../answer/exploit_solution.py  # 运行利用脚本
 
 # 带保护编译
 cmake -DENABLE_PROTECTIONS=ON ..
-make
+make verify
 ```
+
+### 验证脚本说明
+
+`verify_all.sh` 脚本会：
+1. 为每个关卡创建 `flag.txt` 文件
+2. 运行对应的 `exploit_solution.py`
+3. 检查是否成功获取 flag
+4. 生成详细的测试报告
 
 ## 示例：Level 1 挑战
 
