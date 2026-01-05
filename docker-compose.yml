@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  course:
+    build: .
+    container_name: heap-mastery-course
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./source:/home/student/heap-course
+    working_dir: /home/student/heap-course
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    privileged: false
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - DEBUG=1
+    # For debugging with GDB
+    # ports:
+    #   - "1234:1234"
+
+networks:
+  default:
+    name: heap-course-net

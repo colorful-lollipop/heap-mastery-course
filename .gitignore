@@ -1,0 +1,52 @@
+# Compiled binaries
+*.o
+*.so
+*.a
+vuln
+exploit
+solver
+
+# Flag files (keep templates, ignore actual flags)
+flag.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+.Python
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+build/
+*.cmake
+
+# Debug files
+*.core
+gdb.txt
+gdb_history
+
+# Docker
+.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+.cache/
+.claude/

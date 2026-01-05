@@ -1,0 +1,327 @@
+> 我想开发一个学习项目， 用于让安全入门人员学习如何利用内存漏洞， 我们这次想要加强对堆喷堆风水技术的学习，
+  我们的课程可以分为好几关，难度逐渐上升，会提供漏洞程序， 让学员尝试利用其中的漏洞， 其中包含测试程序方便学习者快速验证代码效果，要做最好的教学项目，
+  有一个总的md，每个关卡有自己的md，包含必要的技术知识和问题挑战，请深度思考后计划和开发 
+
+这是一个非常好的安全教学项目想法！堆喷和堆风水是现代漏洞利用中的核心技术。让我进入计划模式，深入规划这个项目的架构和实现。
+
+
+
+  项目核心设计
+
+  7个难度递增的关卡:
+  - Level 0: 环境配置与基础
+  - Level 1: 堆溢出基础 ⭐
+  - Level 2: Use-After-Free ⭐⭐
+  - Level 3: Fastbin Double Free ⭐⭐⭐
+  - Level 4: Tcache Poisoning ⭐⭐⭐
+  - Level 5: 堆喷技术 ⭐⭐⭐⭐
+  - Level 6: 堆风水 ⭐⭐⭐⭐⭐
+  - Level 7: 高级技术与绕过 ⭐⭐⭐⭐⭐+
+
+  每个关卡包含
+
+  1. 漏洞程序 (C/C++) - 精心设计的教学漏洞
+  2. 完整文档:
+    - theory.md - 技术原理深入讲解
+    - walkthrough.md - 逐步利用指南
+    - hints.md - 渐进式提示系统
+  3. 解法文件:
+    - exploit.py - Python利用脚本
+    - exploit.c - C语言验证程序
+    - solver.py - 自动化解题器
+  4. 测试验证 - 自动化验证利用成功
+
+  关键特性
+
+  - ✅ Docker环境 - 一键启动隔离环境
+  - ✅ 渐进式保护 - 从无保护到完整保护的平滑过渡
+  - ✅ 可视化工具 - 堆布局可视化脚本
+  - ✅ 自动化测试 - 所有关卡和利用可验证
+  - ✅ 现代技术 - 涵盖Safe Linking、Tcache等2024-2025最新技术
+                                                                                                 
+● User approved Claude's plan
+  ⎿  Plan saved to: ~/.claude/plans/zippy-wandering-twilight.md · /plan to edit
+     堆喷与堆风水教学项目 - 实施计划
+
+     项目概述
+
+     开发一个全面的堆漏洞利用教学项目，包含7个难度递增的关卡，从基础堆操作到高级堆风水技术。
+
+     关卡设计
+
+     Level 0: 环境配置与基础 (⭐ 难度)
+
+     - 目标: 配置调试环境，理解堆的基本概念
+     - 内容:
+       - 安装配置 gdb/pwndbg/gef
+       - 学习堆 vs 栈的区别
+       - 基础的 malloc/free 操作
+       - 内存布局可视化
+
+     Level 1: 堆溢出基础 (⭐ 难度)
+
+     - 目标: 理解堆chunk结构，掌握基本堆溢出
+     - 漏洞程序: level01_overflow/challenge/vuln.c
+       - 简单的堆缓冲区溢出（off-by-one）
+       - 两个chunk，溢出第一个覆盖第二个
+       - 目标：读取flag
+     - 技术要点:
+       - chunk 结构（size, prev_size, fd, bk）
+       - 堆元数据损坏
+       - 相邻chunk覆盖
+
+     Level 2: Use-After-Free (UAF) (⭐⭐ 难度)
+
+     - 目标: 理解悬垂指针和堆重用
+     - 漏洞程序: level02_uaf/challenge/vuln.c
+       - 分配包含敏感数据的chunk
+       - 释放后继续使用（UAF）
+       - 重新分配实现重叠
+     - 技术要点:
+       - UAF 概念
+       - fastbin/tcache 行为
+       - 堆重用模式
+
+     Level 3: Fastbin Double Free (⭐⭐⭐ 难度)
+
+     - 目标: 掌握fastbin操作和双重释放
+     - 漏洞程序: level03_fastbin_dup/challenge/vuln.c
+       - Double free 漏洞
+       - 操作 fd 指针
+       - 实现任意地址分配
+     - 技术要点:
+       - Fastbin 结构深入
+       - Double free 检测机制
+       - 任意写原语
+
+     Level 4: Tcache Poisoning (⭐⭐⭐ 难度)
+
+     - 目标: 理解现代glibc (2.26+) 的tcache机制
+     - 漏洞程序: level04_tcache/challenge/vuln.c
+       - Tcache double-free
+       - Poison tcache fd指针
+       - 实现任意写
+     - 技术要点:
+       - Tcache 介绍和演进
+       - 与 fastbin 的对比
+       - glibc 版本考虑
+
+     Level 5: 堆喷技术 (⭐⭐⭐⭐ 难度)
+
+     - 目标: 掌握堆喷射技术，提高利用可靠性
+     - 漏洞程序: level05_heap_spray/challenge/vuln.c
+       - UAF 漏洞 + 受控分配
+       - 大量分配填充内存
+       - 高可靠性利用
+     - 技术要点:
+       - 堆喷理论和应用
+       - 分配模式优化
+       - 真实世界案例（浏览器漏洞）
+
+     Level 6: 堆风水 (⭐⭐⭐⭐⭐ 难度)
+
+     - 目标: 精确控制堆布局，复杂堆整理
+     - 漏洞程序: level06_feng_shui/challenge/vuln.c
+       - 复杂的溢出/UAF组合
+       - 多bin协调（fastbin, tcache, smallbin）
+       - 精确定位chunk
+     - 技术要点:
+       - 高级堆整理技术
+       - 多个原语组合
+       - CTF 真实案例
+
+     Level 7: 高级技术与绕过 (⭐⭐⭐⭐⭐+ 难度)
+
+     - 目标: 绕过现代保护机制
+     - 漏洞程序: level07_advanced/challenge/vuln.c
+       - Safe linking 绕过 (glibc 2.32+)
+       - House of Einherjar/Force
+       - 完整保护下的利用
+     - 技术要点:
+       - 现代堆保护机制
+       - 高级绕过技术
+       - 面向未来的技术
+
+     目录结构
+
+     heap-mastery-course/
+     ├── README.md                    # 主文档
+     ├── QUICKSTART.md                # 快速开始
+     ├── CMakeLists.txt               # 构建系统
+     ├── .gitignore
+     │
+     ├── docs/                        # 教育文档
+     │   ├── 00_introduction.md       # 课程介绍
+     │   ├── 01_prerequisites.md      # 前置知识
+     │   ├── 02_environment_setup.md  # 环境配置
+     │   ├── 03_debugging_tools.md    # GDB/pwndbg/gef指南
+     │   ├── 04_heap_internals.md     # glibc malloc深入
+     │   └── 05_exploit_mitigations.md # ASLR, PIE等保护
+     │
+     ├── level00_setup/               # 第0关
+     │   ├── README.md
+     │   ├── check_env.c              # 环境检查
+     │   └── Makefile
+     │
+     ├── level01_overflow/            # 第1关（以下结构相同）
+     │   ├── README.md                # 关卡说明
+     │   ├── challenge/               # 挑战文件
+     │   │   ├── vuln.c               # 漏洞程序
+     │   │   ├── vuln                 # 编译后的二进制
+     │   │   ├── flag.txt             # 目标flag
+     │   │   └── Makefile
+     │   ├── docs/                    # 关卡文档
+     │   │   ├── theory.md            # 技术原理
+     │   │   ├── walkthrough.md       # 逐步指南
+     │   │   └── hints.md             # 提示
+     │   └── solution/                # 解题文件
+     │       ├── exploit.py           # Python利用脚本
+     │       ├── exploit.c            # C验证程序
+     │       └── solver.py            # 自动解题
+     │
+     ├── level02_uaf/
+     ├── level03_fastbin_dup/
+     ├── level04_tcache/
+     ├── level05_heap_spray/
+     ├── level06_feng_shui/
+     ├── level07_advanced/
+     │
+     ├── common/                      # 共享工具
+     │   ├── include/
+     │   │   ├── heap_utils.h         # 堆操作工具
+     │   │   ├── debug_utils.h        # 调试辅助
+     │   │   └── exploit_utils.h      # 利用工具
+     │   ├── src/
+     │   │   ├── heap_utils.c
+     │   │   ├── debug_utils.c
+     │   │   └── exploit_utils.c
+     │   └── scripts/
+     │       ├── check_libc_version.sh
+     │       ├── set_debug_env.sh
+     │       └── visualize_heap.py    # 堆可视化
+     │
+     ├── tests/                       # 测试基础设施
+     │   ├── test_all_levels.sh       # 运行所有测试
+     │   ├── test_compile.sh          # 编译验证
+     │   └── test_exploits.sh         # 利用验证
+     │
+     ├── Dockerfile                   # Docker环境
+     └── docker-compose.yml
+
+     实施步骤
+
+     第一阶段：项目基础设施（优先级最高）
+
+     1. 创建目录结构
+     2. 编写主 README.md
+     3. 创建 CMakeLists.txt（支持多级编译）
+     4. 编写 Dockerfile 和 docker-compose.yml
+     5. 设置 .gitignore
+
+     第二阶段：Level 0（环境配置）
+
+     1. 编写 check_env.c - 检查glibc版本、编译器、调试工具
+     2. 编写环境配置文档
+     3. 创建基础调试脚本
+
+     第三阶段：Level 1-2（基础漏洞）
+
+     1. 实现 level01_overflow/challenge/vuln.c
+     2. 编写 Level 1 完整文档（theory.md, walkthrough.md, hints.md）
+     3. 实现解法程序（exploit.py, exploit.c）
+     4. 实现 level02_uaf 及文档
+     5. 建立测试验证
+
+     第四阶段：Level 3-4（核心技巧）
+
+     1. 实现 Fastbin Dup 关卡及解法
+     2. 实现 Tcache Poisoning 关卡及解法
+     3. 完善文档和可视化工具
+
+     第五阶段：Level 5-6（高级布局）
+
+     1. 实现堆喷关卡
+     2. 实现堆风水关卡
+     3. 高级利用脚本和自动化
+
+     第六阶段：Level 7（专家级）
+
+     1. 实现现代绕过技术关卡
+     2. Safe linking 绕过
+     3. 综合利用链
+
+     第七阶段：完善和优化
+
+     1. 完善所有测试
+     2. 添加更多可视化工具
+     3. 视频教程（可选）
+     4. 在线练习环境（可选）
+
+     关键文件说明
+
+     CMakeLists.txt
+
+     - 支持多级编译
+     - 编译选项：BUILD_SOLUTIONS, ENABLE_PROTECTIONS
+     - 安全教育相关的编译标志
+     - 集成测试框架
+
+     每个关卡的 Makefile
+
+     # 支持多种编译模式
+     make              # 无保护（初学者）
+     make pie          # 启用PIE
+     make protections  # 完整保护
+
+     文档标准
+
+     每个关卡必须包含：
+     - ✅ 清晰的学习目标
+     - ✅ 漏洞解释
+     - ✅ 预期的利用路径
+     - ✅ 安全注意事项
+     - ✅ 真实场景背景
+     - ⚠️ 教育目的警告
+
+     安全实践
+
+     - Docker 容器隔离
+     - 非root用户运行
+     - 资源限制（CPU、内存）
+     - 网络隔离
+     - seccomp 过滤
+
+     技术亮点
+
+     1. 渐进式难度: 从基础到专家的平滑过渡
+     2. 完整文档: 理论+实践+提示系统
+     3. 自动化测试: 所有关卡和利用的可验证性
+     4. 现代技术: 涵盖2024-2025年的最新技术
+     5. 真实场景: 基于真实CTF和CVE案例
+     6. 可视化工具: 帮助理解内存布局
+
+     下一步行动
+
+     1. 立即创建:
+       - 目录结构
+       - CMakeLists.txt
+       - README.md
+       - Dockerfile
+     2. 优先实现:
+       - Level 0（环境）
+       - Level 1（基础溢出）
+       - common 工具库
+       - 测试框架
+     3. 验证方式:
+       - 所有关卡可编译
+       - 所有解法可运行
+       - 所有文档完整
+       - Docker 环境可用
+
+     参考资源
+
+     - https://github.com/shellphish/how2heap
+     - https://github.com/SecurityInnovation/glibc_heap_exploitation_training
+     - https://archive.ringzer0.training/archive/2020-august/heaplab-glibc-heap-exploitation.html
+     - Azeria Labs Heap Exploitation 系列
+     - 近年 BlackHat/DEF CON 关于堆利用的演讲
