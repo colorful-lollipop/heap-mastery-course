@@ -76,12 +76,21 @@ int main() {
                 break;
 
             case 2:
-                // 编辑用户（可能重用释放的 admin 内存）
-                printf("[*] Enter username: ");
-                scanf("%31s", user->username);
-                printf("[*] Enter bio: ");
-                scanf("%63s", user->bio);
-                printf("[+] User updated\n");
+                // 编辑用户（分配临时buffer来重用已释放的admin内存）
+                // 分配一个临时User结构，这会重用刚被free的admin内存
+                User *temp = (User *)malloc(sizeof(User));
+                printf("[+] Allocated temp at %p (may reuse admin memory)\n", temp);
+
+                // 让我们用精心构造的数据填充temp，覆盖原admin的内容
+                printf("[*] Enter username for temp: ");
+                scanf("%31s", temp->username);
+                printf("[*] Enter bio for temp: ");
+                // 注意：去掉长度限制，允许溢出到isAdmin字段
+                scanf("%s", temp->bio);
+                printf("[+] Temp updated\n");
+
+                // 释放temp，但admin指针仍然指向这块内存
+                free(temp);
                 break;
 
             case 3:
