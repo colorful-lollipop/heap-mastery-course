@@ -276,8 +276,9 @@ ret               ; 返回
 ## 下一步
 
 准备好后，进入：
-- [环境配置](../level00_setup/)
-- [堆内部原理](04_heap_internals.md)
+- [环境配置](02_environment_setup.md)
+- [调试工具](03_debugging_tools.md)
+- [可视化图表](VISUAL_DIAGRAMS.md) - 堆结构和攻击技术图解
 
 ---
 
